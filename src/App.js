@@ -1,6 +1,6 @@
-import './App.css';
-import Card from '@mui/material/Card';
 
+import ModalComponent from './ModalComponent'
+import Card from '@mui/material/Card';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -10,27 +10,19 @@ import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddIcon from '@mui/icons-material/Add';
-import Snackbar from '@mui/material/Snackbar';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import './App.css';
 
 
 function App() {
   const [modalActive, setModalActive] = useState(false)
-  const [file, setFile] = useState()
+  // const [file, setFile] = useState()
   const [name, setName] = useState('')
   const [date, setDate] = useState(dayjs(''));
   const [modalHeader, setModalHeader] = useState('Create a New Contact')
@@ -40,7 +32,7 @@ function App() {
   const [activeId, setCurrentActiveId] = useState()
   const [loader, setLoader] = useState(false)
   const [error, setError] = useState('')
-  const [fileUploadInfo, setFileUploadInfo] = useState('')
+  // const [fileUploadInfo, setFileUploadInfo] = useState('')
 
   const serverBaseUrl = 'http://localhost:8080/'
   const fetchContactList = async () => {
@@ -52,10 +44,9 @@ function App() {
       }
       const data = await response.json();
       setContactList(data.data)
-      if (data.data.length  > 0)
-      {
+      if (data.data.length > 0) {
         console.log('hereee')
-      await downloadImages(data.data)
+        await downloadImages(data.data)
       }
       else {
         setLoader(false)
@@ -107,7 +98,7 @@ function App() {
     const results = await asyncMap(array, asyncFunction);
     setFetchedImages(results)
   }
-  
+
   async function asyncMap(array, asyncFunction) {
     const results = await Promise.all(array.map(asyncFunction));
     return results
@@ -125,6 +116,35 @@ function App() {
       console.error('Error fetching contact list:', error);
     }
   };
+
+
+
+  const handleModal = () => {
+    setModalActive(true)
+  }
+
+  const handleClose = () => {
+    setModalActive(false)
+    setName('')
+    setDate(dayjs(''))
+    setCurrentModalImage('')
+    setCurrentActiveId('')
+    // setFileUploadInfo("")
+    if (modalHeader !== 'Create a New Contact')
+
+      setModalHeader('Create a New Contact')
+  }
+
+  const activateModal = (value) => {
+    setName(value.metadata.name)
+    setDate(dayjs(value.metadata.last_contact_date))
+
+    setModalHeader('View a Contact')
+    setCurrentModalImage(value.image_url)
+    setCurrentActiveId(value._id)
+    handleModal()
+  }
+
   return (
     <>
       <div>
@@ -145,10 +165,10 @@ function App() {
           </Grid>
         </Grid>
 
-        {contactList.length === 0 && !loader && <div style={{height:'80vh',justifyContent:'center', alignItems:'center',display:'flex'}}>
-         < SentimentDissatisfiedIcon />
-         <Typography fontSize={25} align='center' marginLeft={2}> No contacts available! </Typography>
-        </div> }
+        {contactList.length === 0 && !loader && <div style={{ height: '80vh', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+          < SentimentDissatisfiedIcon />
+          <Typography fontSize={25} align='center' marginLeft={2}> No contacts available! </Typography>
+        </div>}
         {fetchedImges && fetchedImges.length > 0 && fetchedImges[0] && <List dense sx={{ width: '100%', maxWidth: 550, bgcolor: 'background.paper' }}>
           {contactList.map((value) => {
             return (
@@ -185,9 +205,29 @@ function App() {
             );
           })}
         </List>}
+        <ModalComponent
+        modalActive={modalActive}
+        name={name} 
+        date={date}
+        modalHeader={modalHeader}
+        currentModalImage={currentModalImage}
+        activeId={activeId}
+        error={error}
+        handleClose={handleClose}
+        fetchContactList={fetchContactList}
+        setError={setError}
+        setName={setName}
+        setDate={setDate}
+
+        />
       </Container >
 
-      <Modal
+     
+
+
+      
+
+      {/* <Modal
         open={modalActive}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -262,7 +302,7 @@ function App() {
             message={fileUploadInfo}
           />}
         </Box>
-      </Modal>
+      </Modal> */}
     </>
 
   );
