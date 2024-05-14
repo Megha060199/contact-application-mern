@@ -1,4 +1,4 @@
-
+import React from 'react';
 import ModalComponent from './ModalComponent'
 import Card from '@mui/material/Card';
 import List from '@mui/material/List';
@@ -34,7 +34,7 @@ function App() {
   const [error, setError] = useState('')
   // const [fileUploadInfo, setFileUploadInfo] = useState('')
 
-  const serverBaseUrl = 'http://localhost:8080/'
+  const serverBaseUrl = 'https://contactapplication-423321.uc.r.appspot.com/'
   const fetchContactList = async () => {
     setLoader(true)
     try {

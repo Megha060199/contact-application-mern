@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
@@ -9,7 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import dayjs from 'dayjs';;
+import dayjs from 'dayjs';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
@@ -36,7 +37,7 @@ function ModalComponent(
     }) {
     const [file, setFile] = useState()
     const [fileUploadInfo, setFileUploadInfo] = useState('')
-    const serverBaseUrl = 'http://localhost:8080/'
+    const serverBaseUrl = 'https://contactapplication-423321.uc.r.appspot.com/'
     const style = {
         position: 'absolute',
         top: '50%',
@@ -58,6 +59,22 @@ function ModalComponent(
         console.log(event.target.files[0], 'check-file')
         setFile(event.target.files[0])
         setFileUploadInfo("File Uploaded Successfully")
+    }
+    const updateContact = (updated_name,last_contact_date) =>{
+        const formData = new FormData()
+        formData.append("name", name)
+        formData.append("last_contact_date", date)
+        formData.append("id", activeId)
+        updateData(`${serverBaseUrl}updateUser`, formData)
+        .then(data => {
+            if (data.name) {
+               console.log('Called')
+            }
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+       
     }
 
     const addContactData = () => {
