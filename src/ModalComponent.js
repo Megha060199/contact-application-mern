@@ -18,6 +18,7 @@ import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from '@mui/material/styles';
 
+      
 function ModalComponent(
     {
         modalActive,
@@ -38,6 +39,7 @@ function ModalComponent(
     const [file, setFile] = useState()
     const [fileUploadInfo, setFileUploadInfo] = useState('')
     const serverBaseUrl = 'https://contactapplication-423321.uc.r.appspot.com/'
+  
     const style = {
         position: 'absolute',
         top: '50%',
@@ -60,22 +62,22 @@ function ModalComponent(
         setFile(event.target.files[0])
         setFileUploadInfo("File Uploaded Successfully")
     }
-    const updateContact = (updated_name,last_contact_date) =>{
-        const formData = new FormData()
-        formData.append("name", name)
-        formData.append("last_contact_date", date)
-        formData.append("id", activeId)
-        updateData(`${serverBaseUrl}updateUser`, formData)
-        .then(data => {
-            if (data.name) {
-               console.log('Called')
-            }
-        })
-        .catch(error => {
-            console.error('There was an error!', error);
-        });
+    // const updateContact = () =>{
+    //     const formData = new FormData()
+    //     formData.append("id", activeId)
+    //     formData.append("name", name)
+    //     formData.append("last_contact_date", date)
+        
+        
+    //     updateData(`http://localhost:8080/updateUser`, formData)
+    //     .then(data => {
+    //        console.log(data,'check-data')
+    //     })
+    //     .catch(error => {
+    //         console.error('There was an error!', error);
+    //     });
        
-    }
+    // }
 
     const addContactData = () => {
         console.log(name,date,file,'check-data oopss')
@@ -117,6 +119,28 @@ function ModalComponent(
             throw error;
         }
     };
+    // const updateData = async (url, formData) => {
+        
+    //     try {
+    //         const response = await fetch(url, {
+    //             method: 'POST',
+    //             body: JSON.stringify({
+    //                 'id':activeId,
+    //                 'name':formData.name,
+    //                 'last_contact_date' : formData.last_contact_date
+                    
+    //             }),
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 // 'Content-Type': 'application/x-www-form-urlencoded',
+    //               },
+    //         });
+    //         return response.json();
+    //     } catch (error) {
+    //         console.error('There was an error!', error);
+    //         throw error;
+    //     }
+    // };
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -201,7 +225,7 @@ function ModalComponent(
 
                 {error && <Typography style={{ 'color': 'red', fontSize: 13 }}>{error}</Typography>}
 
-                {modalHeader === 'Create a New Contact' ? <Button onClick={addContactData} variant="contained" size='medium' style={{ marginTop: 25 }}>Add Contact </Button> : <Button onClick={addContactData} variant="contained" size='medium' style={{ marginTop: 25 }}>Update Contact </Button>}
+                {modalHeader === 'Create a New Contact' ? <Button onClick={addContactData} variant="contained" size='medium' style={{ marginTop: 25 }}>Add Contact </Button> : <Button disabled variant="contained" size='medium' style={{ marginTop: 25 }}>Update Contact </Button>}
                 {fileUploadInfo && <Snackbar
                     open={fileUploadInfo}
                     autoHideDuration={2000}
